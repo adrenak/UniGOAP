@@ -17,7 +17,8 @@ public class AgentBase : MonoBehaviour {
 	}
 
 	public void ChangeState(StateBase nextState){
-		currState.Exit (this);
+		if(currState != null)
+			currState.Exit (this);
 		currState = nextState;
 		nextState.Enter (this);
 	}
