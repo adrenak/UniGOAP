@@ -1,13 +1,13 @@
 ﻿using UniLife;
 using UnityEngine;
-using Miner.States;-------`23\
+using Miner.States;
 
 namespace Miner {
 	public class MinerAgent : AgentBase {
-        public Metric health;
-        public Metric money;
-        public Metric hunger;
-        public Metric energy;
+        public Metric health = new Metric(1, 0, 1);
+        public Metric money = new Metric(0, 0, Mathf.Infinity);
+        public Metric hunger = new Metric(0, 0, 1);
+        public Metric energy = new Metric(1, 0, 1);
 
 		protected override void StartImpl (){
             stateMachine = new StateMachine(this, Global.Instance, Dig.Instance);

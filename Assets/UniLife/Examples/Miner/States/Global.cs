@@ -9,15 +9,18 @@ namespace Miner.States {
             get { if (instance == null) instance = new Global(); return instance; }
         }
 
-        MetricDelta accidentalDamage = new MetricDelta(-2000, Metric.Status.Empty);
+        MetricDelta accidentalDamage = new MetricDelta(-.15F, Metric.Status.Empty);
 
         public override void Enter(AgentBase agent) { }
 
         public override void Execute(AgentBase agent) {
             if(UnityEngine.Random.Range(0, 100) == 0) {
                 MinerAgent miner = (MinerAgent)agent;
-                if (miner.health.Update(accidentalDamage))
-                    Debug.Log("Oh shit");
+                Debug.Log("Oh shit that hurtz");
+                if (miner.health.UpdateAbsolute(accidentalDamage)) {
+                    Debug.Log("Ok I'm just gonna die now");
+                    miner.StopAgent();
+                }
             }
         }
 

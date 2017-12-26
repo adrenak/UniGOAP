@@ -17,7 +17,7 @@ namespace Miner.States {
         public override void Execute(AgentBase agent) {
             MinerAgent miner = (MinerAgent)agent;
 
-            if (miner.energy.Update(energyDelta))
+            if (miner.energy.UpdateFrame(energyDelta))
                 miner.GetFSM().ChangeState(Dig.Instance);
         }
 

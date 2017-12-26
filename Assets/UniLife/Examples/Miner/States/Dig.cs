@@ -19,13 +19,13 @@ namespace Miner.States {
 		public override void Execute (AgentBase agent){
             MinerAgent miner = (MinerAgent)agent;
 
-            if (miner.energy.Update(energyDelta))
+            if (miner.energy.UpdateFrame(energyDelta))
                 miner.GetFSM().ChangeState(Rest.Instance);
 
-            if (miner.hunger.Update(hungerDelta))
+            if (miner.hunger.UpdateFrame(hungerDelta))
                 miner.GetFSM().ChangeState(Eat.Instance);
 
-            miner.money.Update(moneyDelta);
+            miner.money.UpdateFrame(moneyDelta);
 		}
 
 		public override void Exit (AgentBase agent){
