@@ -8,20 +8,28 @@ namespace Miner.States {
             get { if (instance == null) instance = new Eat(); return instance; }
         }
 
+        public Eat() {
+            enterSuccessMsg = "Lets eat";
+            enterFailMsg = "Cant eat here";
+            executeMsg = "Eat away";
+            exitMsg = "Enough eating";
+        }
+
         MetricDelta hungerDelta = new MetricDelta(-0.3F, Metric.Status.Empty);
 
         public override void Enter(AgentBase agent) {
-            Debug.Log("Time to eat something");
+            Debug.Log(enterSuccessMsg);
         }
 
         public override void Execute(AgentBase agent) {
+            //Debug.Log(executeMsg);
             var miner = (MinerAgent)agent;
             if (miner.hunger.UpdateFrame(hungerDelta))
-                miner.GetFSM().ChangeState(Dig.Instance);
+                miner.SetDesiredState(Dig.Instance);
         }
 
         public override void Exit(AgentBase agent) {
-            Debug.Log("That's enough eating");
+            Debug.Log(exitMsg);
         }
     }
 }

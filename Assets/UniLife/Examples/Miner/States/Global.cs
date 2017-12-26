@@ -16,10 +16,10 @@ namespace Miner.States {
         public override void Execute(AgentBase agent) {
             if(UnityEngine.Random.Range(0, 100) == 0) {
                 MinerAgent miner = (MinerAgent)agent;
-                Debug.Log("Oh shit that hurtz");
+                //Debug.Log("Oh shit that hurtz");
                 if (miner.health.UpdateAbsolute(accidentalDamage)) {
-                    Debug.Log("Ok I'm just gonna die now");
-                    miner.StopAgent();
+                    //Debug.Log("Ok I'm just gonna die now");
+                    //miner.isActive = false;
                 }
             }
         }

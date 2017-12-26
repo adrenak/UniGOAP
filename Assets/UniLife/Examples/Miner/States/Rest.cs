@@ -8,21 +8,29 @@ namespace Miner.States {
             get { if (instance == null) instance = new Rest(); return instance; }
         }
 
+        public Rest() {
+            enterSuccessMsg = "Lets rest";
+            enterFailMsg = "Cant rest here";
+            executeMsg = "Rest away";
+            exitMsg = "Enough resting";
+        }
+
         MetricDelta energyDelta = new MetricDelta(0.06F, Metric.Status.Full);
 
         public override void Enter(AgentBase agent) {
-            Debug.Log("Going to bed");
+            Debug.Log(enterSuccessMsg);
         }
 
         public override void Execute(AgentBase agent) {
+            //Debug.Log(executeMsg);
             MinerAgent miner = (MinerAgent)agent;
 
             if (miner.energy.UpdateFrame(energyDelta))
-                miner.GetFSM().ChangeState(Dig.Instance);
+                miner.SetDesiredState(Dig.Instance);
         }
 
         public override void Exit(AgentBase agent) {
-            Debug.Log("That was a good sleep");
+            Debug.Log(exitMsg);
         }
     }
 }

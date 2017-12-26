@@ -10,6 +10,8 @@ namespace Miner {
         public Metric energy = new Metric(1, 0, 1);
 
 		protected override void StartImpl (){
+            bindings.Add(ZoneType.Mess, Eat.Instance);
+
             stateMachine = new StateMachine(this, Global.Instance, Dig.Instance);
 		}
 	}
