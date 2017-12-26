@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UniLife;
 using UnityEngine;
-using Miner.State;
+using Miner.States;-------`23\
 
 namespace Miner {
 	public class MinerAgent : AgentBase {
-		public float health = 1;
-		public float money = 0;
-		public float hunger = 0;
-		public float exhaustion = 0;
+        public Metric health;
+        public Metric money;
+        public Metric hunger;
+        public Metric energy;
 
 		protected override void StartImpl (){
-			health = 1F;
-			ChangeState (Dig.Instance);
+            stateMachine = new StateMachine(this, Global.Instance, Dig.Instance);
 		}
 	}
 }
