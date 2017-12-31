@@ -7,7 +7,7 @@ This project currently has two approaches for simulating NPCs:-
 - `Goal Oriented Action Planning` Good explaination here [an article by Brent Owens](https://gamedevelopment.tutsplus.com/tutorials/goal-oriented-action-planning-for-a-smarter-ai--cms-20793). As of now, it is almost identical to the [repository referenced in the article](https://github.com/sploreg/goap). Further development is planned using `GOAP`.  
   
 # Next  
-- Integration with Unity 1NavMesh1 for pathfinding.
+- Integration with Unity `NavMesh` for pathfinding.
 - Some type safety in declaring `Action` preconditions and effects.
 
 # Contact  
