@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace UniLife {
+namespace UniLife.SDP {
     public class MetricDelta {
         float mDelta;
         public float Delta { get { return mDelta; } }

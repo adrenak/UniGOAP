@@ -1,4 +1,4 @@
-﻿namespace UniLife {
+﻿namespace UniLife.SDP {
     public abstract class StateBase {
         public string enterSuccessMsg;
         public string executeMsg;

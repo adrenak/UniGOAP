@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace UniLife {
-    //[RequireComponent(typeof(NavMeshAgent))]
+namespace UniLife.SDP {
     public class AgentBase : MonoBehaviour {
         protected StateMachine stateMachine;
         protected StateBase desiredState;
@@ -17,7 +16,6 @@ namespace UniLife {
         protected virtual void StartImpl(){}
         void Start(){
             isActive = true;
-            //navMeshAgent = GetComponent<NavMeshAgent>();
 		    StartImpl ();
 	    }
 

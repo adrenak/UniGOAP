@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniLife {
+namespace UniLife.SDP {
     public class StateMachine {
         AgentBase owner;
         StateBase currState;

@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace UniLife {
+namespace UniLife.SDP {
     public class Walk : StateBase {
         static Walk instance;
         public static Walk Instance {

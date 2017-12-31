@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniLife {
+namespace UniLife.SDP {
     [System.Serializable]
     public class Metric {
         public enum Status {
