@@ -148,9 +148,9 @@ namespace UniLife.GOAP {
             return s;
         }
 
-        public static string PrettyPrint(Queue<GoapAction> actions) {
+        public static string PrettyPrint(Queue<Action> actions) {
             String s = "";
-            foreach (GoapAction a in actions) {
+            foreach (Action a in actions) {
                 s += a.GetType().Name;
                 s += "-> ";
             }
@@ -158,16 +158,16 @@ namespace UniLife.GOAP {
             return s;
         }
 
-        public static string PrettyPrint(GoapAction[] actions) {
+        public static string PrettyPrint(Action[] actions) {
             String s = "";
-            foreach (GoapAction a in actions) {
+            foreach (Action a in actions) {
                 s += a.GetType().Name;
                 s += ", ";
             }
             return s;
         }
 
-        public static string PrettyPrint(GoapAction action) {
+        public static string PrettyPrint(Action action) {
             String s = action.GetType().Name;
             return s;
         }

@@ -1,6 +1,5 @@
-﻿using UniLife;
-using System;
-using UnityEngine;
+﻿using System;
+using UniLife.SDP;
 
 namespace Miner.States {
     public class Global : StateBase {
