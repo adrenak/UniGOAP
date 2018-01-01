@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace UniLife.GOAP {
     public class Agent : MonoBehaviour {
+        public GameObject actionContainer;
+
         FSM mStateMachine;
         FSM.State mIdleState;
         FSM.State mMovingState;
@@ -14,37 +16,55 @@ namespace UniLife.GOAP {
 
         IActor mActor;
         Planner mPlanner;
-
+        
         void Start() {
+            if(actionContainer == null) {
+                Debug.LogError("GOAP Agent named " + gameObject.name + " doesn't have an action container. The agent will disable itself.");
+                enabled = false;
+                return;
+            }
+                
             mStateMachine = new FSM();
             mAvailableActions = new HashSet<Action>();
             mCurrentActions = new Queue<Action>();
             mPlanner = new Planner();
 
-            GetActorReference();
+            LoadActorFromComponent();
+            LoadActionsFromComponents();
+
             CreateIdleState();
             CreateMovingState();
             CreatePerformState();
-
             mStateMachine.PushState(mIdleState);
-            // Add Action implementations here
-            //mAvailableActions.Add()
+        }
+
+        private void LoadActorFromComponent() {
+            foreach (Component comp in gameObject.GetComponents(typeof(Component))) {
+                if (typeof(IActor).IsAssignableFrom(comp.GetType())) {
+                    mActor = (IActor)comp;
+                    return;
+                }
+            }
+        }
+
+        void LoadActionsFromComponents() {
+            Action[] actions = actionContainer.GetComponents<Action>();
+            foreach (Action a in actions)
+                AddAction(a);
         }
 
         void Update() {
             mStateMachine.Update(gameObject);
         }
 
-
         public void AddAction(Action a) {
             mAvailableActions.Add(a);
         }
 
         public Action GetAction(Type action) {
-            foreach (var a in mAvailableActions) {
+            foreach (var a in mAvailableActions) 
                 if (a.GetType().Equals(action))
                     return a;
-            }
             return null;
         }
 
@@ -56,17 +76,10 @@ namespace UniLife.GOAP {
             return mCurrentActions.Count > 0;
         }
 
-        private void GetActorReference() {
-            foreach (Component comp in gameObject.GetComponents(typeof(Component))) {
-                if (typeof(IActor).IsAssignableFrom(comp.GetType())) {
-                    mActor = (IActor)comp;
-                    return;
-                }
-            }
-        }
 
+        // Agent States
         void CreateIdleState() {
-            mIdleState = (fsm, gameObj) => {
+            mIdleState = (pFSM, pGameObject) => {
                 var _worldState = mActor.GetWorldState();
                 var _goalState = mActor.GetGoalState();
 
@@ -78,7 +91,6 @@ namespace UniLife.GOAP {
                     mStateMachine.ReplaceState(mPerformState);
                 }
                 else {
-                    //Debug.Log("<color=orange>Failed Plan:</color>" + prettyPrint(goal));
                     mActor.OnPlanFailed(_goalState);
                     mStateMachine.ReplaceState(mIdleState);
                 }
@@ -89,7 +101,7 @@ namespace UniLife.GOAP {
             mMovingState = (pFSM, pGameObject) => {
                 Action action = mCurrentActions.Peek();
                 if (action.IsRanged() && action.target == null) {
-                    Debug.Log("<color=red>Fatal error:</color> Action requires a target but has none. Planning failed. You did not assign the target in your Action.checkProceduralPrecondition()");
+                    Debug.Log("ERROR : Action requires a target but has none. Planning failed.");
                     mStateMachine.PopState();
                     mStateMachine.ReplaceState(mIdleState);
                     return;
@@ -102,10 +114,8 @@ namespace UniLife.GOAP {
 
         void CreatePerformState() {
             mPerformState = (pFSM, pGameObject) => {
-                // perform the action
-
                 if (!HasActionPlan()) {
-                    Debug.Log("<color=red>Done actions</color>");
+                    Debug.Log("Done actions.");
                     mStateMachine.ReplaceState(mIdleState);
                     mActor.OnActionsFinished();
                     return;
@@ -135,41 +145,7 @@ namespace UniLife.GOAP {
                     mStateMachine.ReplaceState(mIdleState);
                     mActor.OnActionsFinished();
                 }
-
             };
-        }
-
-        public static string PrettyPrint(HashSet<KeyValuePair<string, object>> state) {
-            String s = "";
-            foreach (KeyValuePair<string, object> kvp in state) {
-                s += kvp.Key + ":" + kvp.Value.ToString();
-                s += ", ";
-            }
-            return s;
-        }
-
-        public static string PrettyPrint(Queue<Action> actions) {
-            String s = "";
-            foreach (Action a in actions) {
-                s += a.GetType().Name;
-                s += "-> ";
-            }
-            s += "GOAL";
-            return s;
-        }
-
-        public static string PrettyPrint(Action[] actions) {
-            String s = "";
-            foreach (Action a in actions) {
-                s += a.GetType().Name;
-                s += ", ";
-            }
-            return s;
-        }
-
-        public static string PrettyPrint(Action action) {
-            String s = action.GetType().Name;
-            return s;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using State = System.Collections.Generic.KeyValuePair<string, object>;
 
 namespace UniLife.GOAP {
-    public abstract class Action {
+    public abstract class Action : MonoBehaviour {
         public float cost = 1F;
         public GameObject target;
 
@@ -11,12 +11,21 @@ namespace UniLife.GOAP {
 
         HashSet<State> mPreconditions = new HashSet<State>();
         HashSet<State> mEffects = new HashSet<State>();
-        bool isInRange = false;
+        bool mIsInRange = false;
+
+        // ================================================
+        // PUBLIC METHODS
+        // ================================================
+        public Action() {
+            Init();
+            SetupStateFlags();
+        }
 
         public void Reset() {
-            isInRange = false;
+            mIsInRange = false;
             target = null;
-            ResetImpl();
+            isDone = false;
+            Init();
         }
 
         public bool IsDone() {
@@ -24,7 +33,11 @@ namespace UniLife.GOAP {
         }
 
         public bool IsInRange() {
-            return isInRange;
+            return mIsInRange;
+        }
+
+        public void SetInRange(bool pStatus) {
+            mIsInRange = pStatus;
         }
 
         // Preconditions and effects
@@ -65,11 +78,18 @@ namespace UniLife.GOAP {
         }
 
         // Virtual Methods
-        public virtual bool CanRun() { return true; }
-        protected virtual void ResetImpl() { }
+        public virtual bool CheckProceduralPrecondition(Agent pAgent) { return true; }
 
         // Abstract Methods
+        protected abstract void Init();
         public abstract bool IsRanged();
         public abstract bool Perform(GameObject pAgent);
+        public abstract void SetupStateFlags();
+
+        // MISC
+        public override string ToString() {
+            string s = GetType().Name;
+            return s;
+        }
     }
 }
