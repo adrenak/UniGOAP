@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using State = System.Collections.Generic.KeyValuePair<string, object>;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public static class Extensions {
         public static string PrettyPrint(this Queue<Action> pActions) {
             string s = "";

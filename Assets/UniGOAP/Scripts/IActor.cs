@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
 using StateFlag = System.Collections.Generic.KeyValuePair<string, object>;
-using Plan = System.Collections.Generic.Queue<UniLife.GOAP.Action>;
+using Plan = System.Collections.Generic.Queue<UniGOAP.Action>;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public interface IActor {
         HashSet<StateFlag> GetCurrentState();
         HashSet<StateFlag> GetGoalState();

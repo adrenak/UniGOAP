@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using StateFlag = System.Collections.Generic.KeyValuePair<string, object>;
 
-namespace UniLife.GOAP.MinerExample {
+namespace UniGOAP.MinerExample {
     [RequireComponent(typeof(NavMeshAgent))]
     public class Miner : MonoBehaviour, IActor {
         NavMeshAgent mNavMeshAgent;

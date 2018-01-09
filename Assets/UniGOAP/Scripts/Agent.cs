@@ -3,9 +3,9 @@ using UnityEngine;
 using UniFSM.DelegateBased;
 using System.Collections.Generic;
 
-using Plan = System.Collections.Generic.Queue<UniLife.GOAP.Action>;
+using Plan = System.Collections.Generic.Queue<UniGOAP.Action>;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public class Agent : MonoBehaviour {
         public GameObject actionContainer;
 

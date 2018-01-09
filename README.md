@@ -1,4 +1,4 @@
-# UniLife
+# UniGOAP  
 A work-in-progress Unity3D solution for intellignt NPCs for use in video games, simulations and similar media.
 
 # Intro

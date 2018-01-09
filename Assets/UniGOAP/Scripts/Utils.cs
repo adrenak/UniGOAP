@@ -2,7 +2,7 @@
 
 using StateFlag = System.Collections.Generic.KeyValuePair<string, object>;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public static class Utils {
         /// <summary>
         /// Removes the action from a HashSet of actions

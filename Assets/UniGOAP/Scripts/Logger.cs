@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public static class Logger {
         public static bool enabled
             = true;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UniLife.GOAP.MinerExample {
+namespace UniGOAP.MinerExample {
     public class DigOreAction : Action {
         public float miningDuration = 0;
         float mStartTime = 0;

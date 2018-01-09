@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public class CollectToolAction : Action {
         protected override void Init() { }
 

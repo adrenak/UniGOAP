@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using State = System.Collections.Generic.KeyValuePair<string, object>;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public abstract class Action : MonoBehaviour {
         public float cost = 1F;
         public GameObject target;

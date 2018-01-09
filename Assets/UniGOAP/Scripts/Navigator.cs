@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-namespace UniLife.GOAP {
+namespace UniGOAP {
     public class Navigator {
         NavMeshAgent mNavMeshAgent;
 

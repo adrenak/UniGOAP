@@ -2169,5 +2169,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 2.5
   target: {fileID: 0}
-  range: 0
-  sleepDuration: 0
+  range: 0.5
