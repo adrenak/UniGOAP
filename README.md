@@ -2,7 +2,7 @@
 A work-in-progress Unity3D solution for intellignt NPCs for use in video games, simulations and similar media.
 
 # Intro
-This project uses Goal Oriences Action Planning to create intelligent agents. Good explaination [here](https://gamedevelopment.tutsplus.com/tutorials/goal-oriented-action-planning-for-a-smarter-ai--cms-20793). As of now, it is almost identical to the [repository referenced in the article](https://github.com/sploreg/goap).   
+This project uses Goal Orienced Action Planning to create intelligent agents. Good explaination [here](https://gamedevelopment.tutsplus.com/tutorials/goal-oriented-action-planning-for-a-smarter-ai--cms-20793). As of now, it is almost identical to the [repository referenced in the article](https://github.com/sploreg/goap).   
 
 For more material on `GOAP`, refer to works by Jeff Orkin of Monolith Productions and F.E.A.R. game AI related material. [This video](https://www.youtube.com/watch?v=78nhJNPS0vA) by Nicolas Meuleau of Unity Technologies also appears to borrow from GOAP concepts.  
   
