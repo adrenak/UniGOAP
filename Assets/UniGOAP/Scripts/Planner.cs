@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+
 using StateFlag = System.Collections.Generic.KeyValuePair<string, object>;
+using Plan = System.Collections.Generic.Queue<UniLife.GOAP.Action>;
 
 namespace UniLife.GOAP {
     public class Planner {
@@ -17,9 +19,8 @@ namespace UniLife.GOAP {
             }
         }
 
-        public Queue<Action> CreatePlan(Agent pAgent, HashSet<Action> pAvailableActions, HashSet<StateFlag> pWorldState, HashSet<StateFlag> pGoalState) {
-            Logger.Log("________________");
-            Logger.Log("CREATING NEW PLAN");
+        public Plan CreatePlan(Agent pAgent, HashSet<Action> pAvailableActions, HashSet<StateFlag> pWorldState, HashSet<StateFlag> pGoalState) {
+            Logger.Log("________________CREATING NEW PLAN________________");
             Logger.Log("Available actions : " + pAvailableActions.PrettyPrint());
             Logger.Log("World state : " + pWorldState.PrettyPrint());
             Logger.Log("Goal state : " + pGoalState.PrettyPrint());
@@ -55,7 +56,7 @@ namespace UniLife.GOAP {
                 n = n.parent;
             }
 
-            Queue<Action> lQueue = new Queue<Action>();
+            Plan lQueue = new Plan();
             foreach (Action a in _result)
                 lQueue.Enqueue(a);
 
@@ -67,76 +68,24 @@ namespace UniLife.GOAP {
 
             foreach(Action _action in pUsableActions) {
                 // Check if the current state satisfies all the preconditions of the action we are considering 
-                if (!InState(_action.GetPreconditions(), pStartNode.state)) 
+                if (!Utils.InState(_action.GetPreconditions(), pStartNode.state)) 
                     continue;
 
                 // If yes, we merge onto the startnode all the effects of that action
-                var _newState = MergeOntoState(pStartNode.state, _action.GetEffects());
+                var _newState = Utils.EnsureSubset(pStartNode.state, _action.GetEffects());
                 Node _node = new Node(pStartNode, pStartNode.cost + _action.cost, _newState, _action);
 
-                if(InState(pGoalState, _newState)) {
+                if(Utils.InState(pGoalState, _newState)) {
                     pLeaves.Add(_node);
                     lFoundAnActionPath = true;
                 }
                 else {
-                    HashSet<Action> _subset = ActionSubset(pUsableActions, _action);
+                    HashSet<Action> _subset = Utils.RemoveFromActions(pUsableActions, _action);
                     if (BuildGraph(_node, pLeaves, _subset, pGoalState))
                         lFoundAnActionPath = true;
                 }
             }
             return lFoundAnActionPath;
-        }
-
-        private HashSet<Action> ActionSubset(HashSet<Action> pActions, Action pActionToRemove) {
-            HashSet<Action> lresult = new HashSet<Action>();
-            foreach (Action a in pActions) 
-                if (!a.Equals(pActionToRemove))
-                    lresult.Add(a);
-            return lresult;
-        }
-
-        // Returns if A is a subset of B
-        bool InState(HashSet<StateFlag> pStateA, HashSet<StateFlag> pStateB) {
-            foreach(var a in pStateA) {
-                bool _match = false;
-                foreach(var b in pStateB) {
-                    if (a.Equals(b)) {
-                        _match = true;
-                        break;
-                    }
-                }
-                if (!_match) 
-                    return false;
-            }
-            return true;
-        }
-
-        HashSet<StateFlag> MergeOntoState(HashSet<StateFlag> pCurrentState, HashSet<StateFlag> pEffects) {
-            var lState = new HashSet<StateFlag>();
-
-            // Create a copy of current state
-            foreach (var p in pCurrentState)
-                lState.Add(new StateFlag(p.Key, p.Value));
-
-            // Go through each StateFlag in StateB and see if it exists in StateA by comparing keys
-            // If it does, then remove the StateFlag
-            // Finally, add the StateFlag from StateB to StateA
-            foreach(StateFlag _effect in pEffects) {
-                bool _exists = false;
-                foreach(StateFlag s in lState) {
-                    if (s.Key.Equals(_effect.Key)) {
-                        _exists = true;
-                        break;
-                    }
-                }
-
-                if (_exists) {
-                    lState.RemoveWhere((StateFlag s) => { return s.Key.Equals(_effect.Key); });
-                    StateFlag _updated = new StateFlag(_effect.Key, _effect.Value);
-                    lState.Add(_updated);
-                }
-            }
-            return lState;
         }
     }
 }

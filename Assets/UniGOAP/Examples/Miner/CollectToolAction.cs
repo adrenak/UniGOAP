@@ -20,7 +20,6 @@ namespace UniLife.GOAP {
             return true;
         }
 
-
         public override bool CheckProceduralPrecondition(Agent pAgent) {
             target = GameObject.Find("Warehouse");
             return target != null;

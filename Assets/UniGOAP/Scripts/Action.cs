@@ -6,7 +6,7 @@ namespace UniLife.GOAP {
     public abstract class Action : MonoBehaviour {
         public float cost = 1F;
         public GameObject target;
-        public float range;
+        public float range = 0.5f; // Setting this to zero will lead to the agent never reaching it
 
         protected bool isDone;
 

@@ -11,11 +11,11 @@ namespace UniLife.GOAP.MinerExample {
 
         public override void SetupStateFlags() {
             AddPrecondition(StateFlagNames.HAS_TOOL, true);
-            AddPrecondition(StateFlagNames.HAS_ORE, false);
+            AddPrecondition(StateFlagNames.HAS_ENOUGH_MONEY, false);
             AddPrecondition(StateFlagNames.IS_TIRED, false);
 
             AddEffect(StateFlagNames.HAS_TOOL, false);
-            AddEffect(StateFlagNames.HAS_ORE, true);
+            AddEffect(StateFlagNames.HAS_ENOUGH_MONEY, true);
             AddEffect(StateFlagNames.IS_TIRED, true);
         }
 

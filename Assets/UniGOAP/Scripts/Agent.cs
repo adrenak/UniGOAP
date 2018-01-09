@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using UniFSM.DelegateBased;
 using System.Collections.Generic;
+
+using Plan = System.Collections.Generic.Queue<UniLife.GOAP.Action>;
 
 namespace UniLife.GOAP {
     public class Agent : MonoBehaviour {
@@ -12,7 +15,7 @@ namespace UniLife.GOAP {
         FSM.State mPerformState;
 
         HashSet<Action> mAvailableActions;
-        Queue<Action> mCurrentActions;
+        Plan mPlan;
 
         IActor mActor;
         Planner mPlanner;
@@ -24,13 +27,13 @@ namespace UniLife.GOAP {
                 return;
             }
                 
-            mStateMachine = new FSM();
+            mStateMachine = new FSM(this);
             mAvailableActions = new HashSet<Action>();
-            mCurrentActions = new Queue<Action>();
+            mPlan = new Plan();
             mPlanner = new Planner();
 
             LoadActorFromComponent();
-            LoadActionsFromComponents();
+            LoadActionsFromContainer();
 
             CreateIdleState();
             CreateMovingState();
@@ -47,14 +50,10 @@ namespace UniLife.GOAP {
             }
         }
 
-        void LoadActionsFromComponents() {
+        void LoadActionsFromContainer() {
             Action[] actions = actionContainer.GetComponents<Action>();
             foreach (Action a in actions)
                 AddAction(a);
-        }
-
-        void Update() {
-            mStateMachine.Update(gameObject);
         }
 
         public void AddAction(Action a) {
@@ -73,78 +72,77 @@ namespace UniLife.GOAP {
         }
 
         private bool HasActionPlan() {
-            return mCurrentActions.Count > 0;
+            return mPlan.Count > 0;
         }
 
-
         // Agent States
+        // The agent only has three states:
+        // Idle : During which the agent is looking for something to do
+        // Moving : When the agent is travelling to a location where the next action can be executed
+        // Perform : When the agent is actually performing the action
         void CreateIdleState() {
             mIdleState = (pFSM, pGameObject) => {
                 var _currentState = mActor.GetCurrentState();
                 var _goalState = mActor.GetGoalState();
 
-                Queue<Action> _plan = mPlanner.CreatePlan(this, mAvailableActions, _currentState, _goalState);
+                Plan _plan = mPlanner.CreatePlan(this, mAvailableActions, _currentState, _goalState);
                 if (_plan != null) {
-                    mCurrentActions = _plan;
+                    mPlan = _plan;
                     mActor.OnPlanFound(_goalState, _plan);
 
-                    mStateMachine.ReplaceState(mPerformState);
+                    mStateMachine.PopAndPush(mPerformState);
                 }
                 else {
                     mActor.OnPlanFailed(_goalState);
-                    mStateMachine.ReplaceState(mIdleState);
+                    mStateMachine.PopAndPush(mIdleState);
                 }
             };
         }
 
         void CreateMovingState() {
             mMovingState = (pFSM, pGameObject) => {
-                Action action = mCurrentActions.Peek();
-                if (action.IsRanged() && action.target == null) {
-                    Debug.Log("ERROR : Action requires a target but has none. Planning failed.");
-                    mStateMachine.PopState();
-                    mStateMachine.ReplaceState(mIdleState);
+                Action _action = mPlan.Peek();
+                if (_action.target == null) {
+                    mActor.OnMovingFailed(_action);
+                    mStateMachine.PopAndPush(mIdleState);
                     return;
                 }
 
-                if (mActor.MoveAgent(action))
+                if (mActor.MoveAgent(_action)) {
+                    mActor.OnMovingFinished(_action);
                     mStateMachine.PopState();
+                }
             };
         }
 
         void CreatePerformState() {
             mPerformState = (pFSM, pGameObject) => {
-                if (!HasActionPlan()) {
-                    Debug.Log("Done actions.");
-                    mStateMachine.ReplaceState(mIdleState);
-                    mActor.OnActionsFinished();
-                    return;
-                }
+                Action _action = mPlan.Peek();
 
-                Action action = mCurrentActions.Peek();
-                if (action.IsDone()) 
-                    mCurrentActions.Dequeue();
+                if (_action.IsDone()) {
+                    mActor.OnActionFinished(_action);
+                    mPlan.Dequeue();
 
-                if (HasActionPlan()) {
-                    action = mCurrentActions.Peek();
-                    bool inRange = action.IsRanged() ? action.IsInRange() : true;
-
-                    if (inRange) {
-                        bool success = action.Perform(pGameObject);
-
-                        if (!success) {
-                            mStateMachine.ReplaceState(mIdleState);
-                            mActor.OnPlanAborted(action);
-                        }
+                    if (!HasActionPlan()) {
+                        mStateMachine.PopAndPush(mIdleState);
+                        mActor.OnActionsFinished();
+                        return;
                     }
-                    else 
-                        mStateMachine.PushState(mMovingState);
+                }
 
+                _action = mPlan.Peek();
+                bool inRange = _action.IsRanged() ? _action.IsInRange() : true;
+
+                if (inRange) {
+                    bool success = _action.Perform(gameObject);
+
+                    if (!success) {
+                        mStateMachine.PopAndPush(mIdleState);
+                        mActor.OnActionFailed(_action);
+                    }
                 }
-                else {
-                    mStateMachine.ReplaceState(mIdleState);
-                    mActor.OnActionsFinished();
-                }
+                else 
+                    mStateMachine.PushState(mMovingState);
             };
         }
     }

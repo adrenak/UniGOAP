@@ -15,6 +15,7 @@ namespace UniLife.GOAP {
             AddPrecondition(StateFlagNames.IS_TIRED, true);
 
             AddEffect(StateFlagNames.IS_TIRED, false);
+            AddEffect(StateFlagNames.HAS_ENOUGH_MONEY, false);
         }
 
         public override bool IsRanged() {
