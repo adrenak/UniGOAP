@@ -8,6 +8,7 @@ For more material on `GOAP`, refer to works by Jeff Orkin of Monolith Production
   
 # Next  
 - Support for something similar to `Func<bool>` and `Actions()` as preconditions and effects respectively for agent actions. Allowing for more sophisticated state change operation than just `bool` flags  
+- Support for Fuzzy Logic in AI decision making.  
 
 # Note
 - This project was initially started with an approach based on the `State Design Pattern` discussed in Programming Game AI by Example written by Mat Buckland. The scope of the project soon became too large for FSM based agents. That code is now [here](https://github.com/adrenak/UniFSM)  
